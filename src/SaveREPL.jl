@@ -40,9 +40,7 @@ function script(histories, lines)
             entries = [history[int(line)+1]]
         end
         for entry in entries
-            if entry.mode != "julia"
-                error("cannot output shell or help modes")
-            end
+            entry.mode == "julia" || error("cannot output shell or help modes")
             output *= entry.command
         end
     end
@@ -50,7 +48,7 @@ function script(histories, lines)
 end
 
 function history()
-    julia_history = open(homedir()*"/.julia_history")
+    julia_history = open(Base.REPL.find_hist_file())
     line = readline(julia_history)
     histories = REPLEntry[]
     while !eof(julia_history)
